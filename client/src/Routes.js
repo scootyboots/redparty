@@ -12,6 +12,8 @@ function Routes() {
 				<Switch>
 					<Route path='/' component={Welcome} exact />
 					<Route path='/room/:id' component={Room} exact />
+					// for testing
+					<Route path='/room/' component={Room} exact />
 				</Switch>
 				<Visible xs>
 					{/* Sticky footer Overlap fix for smaller screens */}

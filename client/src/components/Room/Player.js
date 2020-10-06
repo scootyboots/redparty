@@ -5,7 +5,8 @@ import { SignalContext } from '../../contexts/SignalContext';
 
 function Player(props) {
 	let player = createRef();
-	const { videoId, socket } = props;
+	const { videoId, socket, startNext } = props;
+	const videoQueue = [videoId]
 	const options = {
 		width: '100%',
 		height: '500px',
@@ -72,6 +73,7 @@ function Player(props) {
 
 			case 0:
 				console.log('Case 0 Video Ended');
+				startNext()
 				break;
 
 			case 1:

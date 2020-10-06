@@ -15,6 +15,7 @@ function Room(props) {
 	const [isHost, setHost] = useState(false);
 	const [socket, setSocket] = useState(null);
 	const [roomLoading, setRoomLoading] = useState(true);
+	const [videoQueue, updateQueue] = useState([])
 
 	const { dispatch: userDispatch, userData } = useContext(UserContext);
 	const { dispatch: signalDispatch } = useContext(SignalContext);
@@ -101,15 +102,29 @@ function Room(props) {
 		return url;
 	};
 
-	const onVideoChange = async () => {
+	// add to queue
+	const addVideoToQueue = async () => {
 		const newURL = await askVideoURL();
 
 		if (newURL && socket) {
 			console.log(_socket);
 			const videoId = getVideoId(newURL);
-			socket.emit('changeVideo', { videoId });
+			updateQueue([...videoQueue, videoId])
+			// socket.emit('changeVideo', { videoId });
 		}
 	};
+
+	// update queue and start new video
+	const startNext = () => {
+		if (videoQueue.length > 0) {
+			updateQueue(videoQueue.splice(0, 1))
+		}
+		if (socket && videoQueue.length >= 1) {
+			const topVideo = videoQueue[0]
+			socket.emit('changeVideo', { topVideo })
+		}
+	}
+
 
 	const alertNotImplemented = () => {
 		alert('Not implemented');
@@ -127,13 +142,14 @@ function Room(props) {
 							<Player
 								socket={socket}
 								videoId={userData.videoId}
+								startNext={startNext}
 							/>
 						</Col>
 						<Col md={4}>
 							<Options
 								onInvite={showInviteModal}
 								alertNotImplemented={alertNotImplemented}
-								onVideoChange={onVideoChange}
+								addVideoToQueue={addVideoToQueue}
 							/>
 							<Chat socket={socket} />
 						</Col>

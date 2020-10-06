@@ -8,7 +8,7 @@ const Options = (props) => {
 			<OptionButton
 				icon='videocam'
 				title='Change to another YouTube video'
-				onClick={props.onVideoChange}
+				onClick={props.addVideoToQueue}
 			>
 				Change Video
 			</OptionButton>
